@@ -712,6 +712,8 @@ async function fetchNews(){
     const res = await fetch(`/.netlify/functions/news?cat=${encodeURIComponent(cat.kw)}`);
     const data = await res.json();
     
+    console.log('GNews réponse:', data);
+    
     if(data.articles && data.articles.length > 0){
       allArticles = data.articles.map((a,i) => ({
         title: a.title,

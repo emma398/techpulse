@@ -699,7 +699,7 @@ function filterCat(id, btn){
 
 // ─── FEED ───────────────────────────────────────────────────────────────────
 
-const GNEWS_KEY = '1982130847deba5470a0a8ff9a9417a1';
+//const GNEWS_KEY = '1982130847deba5470a0a8ff9a9417a1';
 
 async function fetchNews(){
   const content = document.getElementById('content');
@@ -708,7 +708,8 @@ async function fetchNews(){
   const cat = getCat(currentCat);
   
   try {
-    const res = await fetch(`https://gnews.io/api/v4/search?q=${encodeURIComponent(cat.kw)}&lang=fr&max=8&apikey=${GNEWS_KEY}`);
+    //const res = await fetch(`https://gnews.io/api/v4/search?q=${encodeURIComponent(cat.kw)}&lang=fr&max=8&apikey=${GNEWS_KEY}`);
+    const res = await fetch(`/.netlify/functions/news?cat=${encodeURIComponent(cat.kw)}`);
     const data = await res.json();
     
     if(data.articles && data.articles.length > 0){

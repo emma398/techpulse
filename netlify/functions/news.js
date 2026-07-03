@@ -2,7 +2,7 @@ exports.handler = async (event) => {
   const { cat } = event.queryStringParameters;
   
   const res = await fetch(
-    `https://gnews.io/api/v4/search?q=${cat}&lang=fr&max=8&apikey=${process.env.GNEWS_API_KEY}`
+    `https://gnews.io/api/v4/search?q=${encodeURIComponent(cat)}&lang=fr&max=8&apikey=${process.env.GNEWS_API_KEY}`
   );
   const data = await res.json();
   

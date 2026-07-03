@@ -699,20 +699,38 @@ function filterCat(id, btn){
 
 // ─── FEED ───────────────────────────────────────────────────────────────────
 
-function fetchNews(){
+const GNEWS_KEY = '1982130847deba5470a0a8ff9a9417a1';
+
+async function fetchNews(){
   const content = document.getElementById('content');
   content.innerHTML = '<div class="loading-state"><div class="spinner"></div><span>Chargement...</span></div>';
-  setTimeout(()=>{
-    const cat = getCat(currentCat);
+  
+  const cat = getCat(currentCat);
+  
+  try {
+    const res = await fetch(`https://gnews.io/api/v4/search?q=${encodeURIComponent(cat.kw)}&lang=fr&max=8&apikey=${GNEWS_KEY}`);
+    const data = await res.json();
+    
+    if(data.articles && data.articles.length > 0){
+      allArticles = data.articles.map((a,i) => ({
+        title: a.title,
+        desc: a.description || '',
+        src: a.source?.name || 'Source',
+        url: a.url,
+        cat: currentCat,
+        views: Math.floor(Math.random()*5000)+500,
+        mins: i * 90 + 30,
+      }));
+    } else {
+      throw new Error('no results');
+    }
+  } catch(e) {
+    // Fallback sur les données mock si l'API échoue
     const pool = MOCK[currentCat] || MOCK['all'];
-    const base = Date.now();
-    allArticles = pool.map((a,i)=>({
-      ...a, cat:currentCat,
-      url:'#',
-      mins: 30 + i*120,
-    }));
-    renderFeed();
-  }, 600);
+    allArticles = pool.map((a,i) => ({...a, cat:currentCat, url:'#', mins: 30+i*120}));
+  }
+  
+  renderFeed();
 }
 
 function renderFeed(){
